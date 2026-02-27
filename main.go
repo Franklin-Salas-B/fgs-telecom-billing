@@ -40,7 +40,7 @@ func main() {
 	// Cargar templates HTML
 	templates = template.Must(template.ParseGlob("templates/*.html"))
 
-	// Servir archivos estáticos (CSS, JS)
+	// Servir archivos estáticos
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// Rutas HTML
@@ -49,15 +49,11 @@ func main() {
 	http.HandleFunc("/productos", productosHandler)
 	http.HandleFunc("/factura", facturaHandler)
 
-	// Rutas API (temporal)
-	http.HandleFunc("/api/carrito", carritoAPIHandler)
-	http.HandleFunc("/api/checkout", checkoutAPIHandler)
-
 	fmt.Println("Servidor iniciado en http://0.0.0.0:8081")
 	log.Fatal(http.ListenAndServe("0.0.0.0:8081", nil))
 }
 
-// Función para renderizar templates
+// Render
 func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 	err := templates.ExecuteTemplate(w, tmpl, data)
 	if err != nil {
@@ -80,17 +76,4 @@ func productosHandler(w http.ResponseWriter, r *http.Request) {
 
 func facturaHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "factura.html", nil)
-}
-
-// Handlers API (temporal)
-func carritoAPIHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	// TODO: conectar a la tabla carrito en MySQL
-	w.Write([]byte(`[]`))
-}
-
-func checkoutAPIHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	// TODO: procesar el checkout, generar orden y detalle
-	w.Write([]byte(`{"status":"ok"}`))
 }
