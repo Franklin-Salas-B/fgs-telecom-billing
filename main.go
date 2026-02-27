@@ -1,158 +1,96 @@
 package main
 
 import (
-    "database/sql"
-    "encoding/json"
-    "fmt"
-    "log"
-    "net/http"
-    "strconv"
+	"database/sql"
+	"fmt"
+	"log"
+	"net/http"
+	"text/template"
 
-    _ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
-type Producto struct {
-    ID          int     `json:"id"`
-    Nombre      string  `json:"nombre"`
-    Descripcion string  `json:"descripcion"`
-    Precio      float64 `json:"precio"`
-    CreadoEn    string  `json:"creado_en"`
-}
+// Configuración de la base de datos
+const (
+	dbUser     = "ecom_user"
+	dbPassword = "P1ch1nch4"
+	dbName     = "ecommerce_db"
+)
 
+// Variables globales
 var db *sql.DB
+var templates *template.Template
 
 func main() {
-    var err error
-    dsn := "ecom_user:P1ch1nch4@tcp(127.0.0.1:3306)/ecommerce_db"
-    db, err = sql.Open("mysql", dsn)
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer db.Close()
+	// Conectar a MySQL
+	var err error
+	dsn := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s", dbUser, dbPassword, dbName)
+	db, err = sql.Open("mysql", dsn)
+	if err != nil {
+		log.Fatal("Error al conectar a MySQL:", err)
+	}
+	defer db.Close()
 
-    if err = db.Ping(); err != nil {
-        log.Fatal(err)
-    }
-    fmt.Println("Conectado a MySQL correctamente")
+	err = db.Ping()
+	if err != nil {
+		log.Fatal("No se puede conectar a la base de datos:", err)
+	}
+	fmt.Println("Conexión MySQL exitosa")
 
-    _, err = db.Exec(`
-        CREATE TABLE IF NOT EXISTS productos (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            nombre VARCHAR(255) NOT NULL,
-            descripcion TEXT,
-            precio DECIMAL(10,2) NOT NULL,
-            creado_en VARCHAR(50) NOT NULL
-        );
-    `)
-    if err != nil {
-        log.Fatal(err)
-    }
+	// Cargar templates HTML
+	templates = template.Must(template.ParseGlob("templates/*.html"))
 
-    http.HandleFunc("/productos", productosHandler)
-    http.HandleFunc("/productos/", productoHandler)
+	// Servir archivos estáticos (CSS, JS)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-    fmt.Println("Servidor corriendo en :8080")
-    log.Fatal(http.ListenAndServe(":8080", nil))
+	// Rutas HTML
+	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/usuarios", usuariosHandler)
+	http.HandleFunc("/productos", productosHandler)
+	http.HandleFunc("/factura", facturaHandler)
+
+	// Rutas API (temporal)
+	http.HandleFunc("/api/carrito", carritoAPIHandler)
+	http.HandleFunc("/api/checkout", checkoutAPIHandler)
+
+	fmt.Println("Servidor iniciado en http://0.0.0.0:8081")
+	log.Fatal(http.ListenAndServe("0.0.0.0:8081", nil))
+}
+
+// Función para renderizar templates
+func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
+	err := templates.ExecuteTemplate(w, tmpl, data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+// Handlers HTML
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, "index.html", nil)
+}
+
+func usuariosHandler(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, "usuarios.html", nil)
 }
 
 func productosHandler(w http.ResponseWriter, r *http.Request) {
-    switch r.Method {
-    case "GET":
-        listarProductos(w)
-    case "POST":
-        crearProducto(w, r)
-    default:
-        w.WriteHeader(http.StatusMethodNotAllowed)
-    }
+	renderTemplate(w, "productos.html", nil)
 }
 
-func productoHandler(w http.ResponseWriter, r *http.Request) {
-    idStr := r.URL.Path[len("/productos/"):]
-    id, err := strconv.Atoi(idStr)
-    if err != nil {
-        http.Error(w, "ID inválido", http.StatusBadRequest)
-        return
-    }
-
-    switch r.Method {
-    case "PUT":
-        actualizarProducto(w, r, id)
-    case "DELETE":
-        eliminarProducto(w, id)
-    default:
-        w.WriteHeader(http.StatusMethodNotAllowed)
-    }
+func facturaHandler(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, "factura.html", nil)
 }
 
-func listarProductos(w http.ResponseWriter) {
-    rows, err := db.Query("SELECT id, nombre, descripcion, precio, creado_en FROM productos")
-    if err != nil {
-        http.Error(w, err.Error(), 500)
-        return
-    }
-    defer rows.Close()
-
-    productos := []Producto{}
-    for rows.Next() {
-        var p Producto
-        if err := rows.Scan(&p.ID, &p.Nombre, &p.Descripcion, &p.Precio, &p.CreadoEn); err != nil {
-            http.Error(w, err.Error(), 500)
-            return
-        }
-        productos = append(productos, p)
-    }
-
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(productos)
+// Handlers API (temporal)
+func carritoAPIHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	// TODO: conectar a la tabla carrito en MySQL
+	w.Write([]byte(`[]`))
 }
 
-func crearProducto(w http.ResponseWriter, r *http.Request) {
-    var p Producto
-    if err := json.NewDecoder(r.Body).Decode(&p); err != nil {
-        http.Error(w, err.Error(), 400)
-        return
-    }
-
-    res, err := db.Exec(
-        "INSERT INTO productos(nombre, descripcion, precio, creado_en) VALUES (?, ?, ?, ?)",
-        p.Nombre, p.Descripcion, p.Precio, p.CreadoEn,
-    )
-    if err != nil {
-        http.Error(w, err.Error(), 500)
-        return
-    }
-
-    id, _ := res.LastInsertId()
-    p.ID = int(id)
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(p)
-}
-
-func actualizarProducto(w http.ResponseWriter, r *http.Request, id int) {
-    var p Producto
-    if err := json.NewDecoder(r.Body).Decode(&p); err != nil {
-        http.Error(w, err.Error(), 400)
-        return
-    }
-
-    _, err := db.Exec(
-        "UPDATE productos SET nombre=?, descripcion=?, precio=?, creado_en=? WHERE id=?",
-        p.Nombre, p.Descripcion, p.Precio, p.CreadoEn, id,
-    )
-    if err != nil {
-        http.Error(w, err.Error(), 500)
-        return
-    }
-    p.ID = id
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(p)
-}
-
-func eliminarProducto(w http.ResponseWriter, id int) {
-    _, err := db.Exec("DELETE FROM productos WHERE id=?", id)
-    if err != nil {
-        http.Error(w, err.Error(), 500)
-        return
-    }
-    w.WriteHeader(http.StatusNoContent)
+func checkoutAPIHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	// TODO: procesar el checkout, generar orden y detalle
+	w.Write([]byte(`{"status":"ok"}`))
 }
