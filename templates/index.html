@@ -1,16 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>FGS Telecom Ecommerce</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FGS Telecom | Billing System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body>
-    <h1>Página Principal - FGS Ecommerce</h1>
-    <nav>
-        <a href="/usuarios">Usuarios</a> |
-        <a href="/productos">Productos</a> |
-        <a href="/factura">Facturas</a>
-    </nav>
-    <p>Bienvenido al sistema de ecommerce de FGS Telecom.</p>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-slate-900 text-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16 items-center">
+                    <div class="flex items-center gap-2">
+                        <div class="bg-blue-600 p-2 rounded-lg">
+                            <i class="fas fa-broadcast-tower text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight text-white">FGS <span class="text-blue-400">Telecom</span></span>
+                    </div>
+                    
+                    <nav class="hidden md:flex space-x-8">
+                        <a href="/" class="flex items-center gap-2 hover:text-blue-400 transition-colors border-b-2 border-blue-500 pb-1">
+                            <i class="fas fa-home text-sm"></i> Inicio
+                        </a>
+                        <a href="/usuarios" class="flex items-center gap-2 hover:text-blue-400 transition-colors text-gray-300">
+                            <i class="fas fa-users text-sm"></i> Usuarios
+                        </a>
+                        <a href="/productos" class="flex items-center gap-2 hover:text-blue-400 transition-colors text-gray-300">
+                            <i class="fas fa-box text-sm"></i> Productos
+                        </a>
+                        <a href="/factura" class="flex items-center gap-2 hover:text-blue-400 transition-colors text-gray-300">
+                            <i class="fas fa-file-invoice-dollar text-sm"></i> Facturación
+                        </a>
+                    </nav>
+
+                    <div class="flex items-center gap-4">
+                        <button class="text-gray-400 hover:text-white"><i class="fas fa-bell"></i></button>
+                        <div class="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center font-bold">A</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl">
+            <div class="mb-8">
+                <h1 class="text-3xl font-extrabold text-slate-800">Panel de Gestión</h1>
+                <p class="text-gray-500">Bienvenido al sistema de control comercial y facturación de red.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-users text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Gestión de Clientes</h3>
+                    <p class="text-sm text-gray-500">Administra altas, bajas y estados de conexión de los suscriptores.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-receipt text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Facturación Masiva</h3>
+                    <p class="text-sm text-gray-500">Genera recibos mensuales y procesa pagos de servicios activos.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-line text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Reportes de Red</h3>
+                    <p class="text-sm text-gray-500">Visualiza el consumo de datos y métricas de rendimiento por zona.</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-white border-t border-gray-200 py-6">
+            <div class="max-w-7xl mx-auto px-4 text-center text-gray-400 text-sm">
+                &copy; 2024 FGS Telecom S.A. - Todos los derechos reservados.
+            </div>
+        </footer>
+    </div>
+
 </body>
 </html>
