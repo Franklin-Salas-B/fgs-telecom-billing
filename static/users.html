@@ -1,0 +1,21 @@
+{{define "content"}}
+<h2>Usuarios</h2>
+<p>Listado de usuarios registrados en el sistema.</p>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Creado</th>
+    </tr>
+    {{range .}}
+    <tr>
+        <td>{{.ID}}</td>
+        <td>{{.Name}}</td>
+        <td>{{.Email}}</td>
+        <td>{{.CreatedAt}}</td>
+    </tr>
+    {{end}}
+</table>
+{{end}}

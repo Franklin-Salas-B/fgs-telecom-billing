@@ -1,4 +1,6 @@
-servidor
+*.exe
+*.out
 *.log
-*.BAK
-backups/
+/tmp/
+/bin/
+/vendor/

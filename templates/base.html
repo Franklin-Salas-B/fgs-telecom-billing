@@ -1,27 +1,23 @@
-{{define "base"}}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>FGS Telecom Billing</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>{{block "title" .}}FGS Billing{{end}}</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
     <header>
         <h1>FGS Telecom Billing</h1>
         <nav>
-            <a href="/">Inicio</a>
-            <a href="/users">Usuarios</a>
+            <a href="/">Dashboard</a> |
+            <a href="/usuarios">Usuarios</a> |
+            <a href="/productos">Productos</a> |
+            <a href="/facturas">Facturas</a>
         </nav>
     </header>
 
     <main>
-        {{template "content" .}}
+        {{block "content" .}}Contenido por defecto{{end}}
     </main>
-
-    <footer>
-        <p>Proyecto universitario – Go + MySQL</p>
-    </footer>
 </body>
 </html>
-{{end}}

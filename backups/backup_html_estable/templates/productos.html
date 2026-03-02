@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - FGS Telecom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #6c757d;
+            --bg-color: #f4f7f6;
+            --sidebar-color: #1a202c;
+            --text-dark: #2d3748;
+            --white: #ffffff;
+            --accent: #4fd1c5;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            color: var(--text-dark);
+        }
+
+        /* Sidebar Navigation */
+        nav {
+            width: 250px;
+            height: 100vh;
+            background-color: var(--sidebar-color);
+            color: white;
+            position: fixed;
+            padding: 20px 0;
+        }
+
+        nav h2 {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        nav a {
+            display: block;
+            padding: 15px 25px;
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: #2d3748;
+            color: white;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        nav i { margin-right: 10px; width: 20px; }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 40px;
+            width: calc(100% - 250px);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; }
+
+        /* Search & Actions Bar */
+        .toolbar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 40px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            outline: none;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            color: var(--secondary-color);
+        }
+
+        .btn-add {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-add:hover { background-color: #004494; }
+
+        /* Table Card */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px;
+            background-color: #f8fafc;
+            color: var(--secondary-color);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 18px 15px;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        /* Product Specific Styles */
+        .category-tag {
+            background: #edf2f7;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #4a5568;
+        }
+
+        .price-tag {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .desc-text {
+            color: var(--secondary-color);
+            font-size: 0.85rem;
+        }
+
+        .action-icons i {
+            margin-left: 10px;
+            cursor: pointer;
+            color: #a0aec0;
+            transition: 0.2s;
+        }
+
+        .action-icons i:hover { color: var(--primary-color); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <h2>FGS TELECOM</h2>
+    <a href="/"><i class="fas fa-chart-line"></i> Dashboard</a>
+    <a href="/usuarios"><i class="fas fa-user-shield"></i> Usuarios</a>
+    <a href="/productos" class="active"><i class="fas fa-boxes-stacked"></i> Productos</a>
+    <a href="/factura"><i class="fas fa-file-invoice-dollar"></i> Facturación</a>
+</nav>
+
+<div class="main-content">
+    <header>
+        <div>
+            <h1>Productos / Servicios</h1>
+            <p style="color: var(--secondary-color); margin-top: 5px;">Inventario de materiales y servicios técnicos.</p>
+        </div>
+        <a href="#" class="btn-add"><i class="fas fa-plus"></i> Nuevo Ítem</a>
+    </header>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Buscar por nombre, categoría o descripción...">
+        </div>
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Categoría</th>
+                    <th>Ítem</th>
+                    <th>Descripción</th>
+                    <th style="text-align: right;">Precio Unit.</th>
+                    <th style="text-align: center;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#P-001</td>
+                    <td><span class="category-tag">Cableado</span></td>
+                    <td><strong>UTP Cat 6</strong></td>
+                    <td class="desc-text">Cable de red de alta velocidad (por metro)</td>
+                    <td class="price-tag" style="text-align: right;">$0.80</td>
+                    <td class="action-icons" style="text-align: center;">
+                        <i class="fas fa-pen"></i>
+                        <i class="fas fa-trash"></i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>#P-002</td>
+                    <td><span class="category-tag">Conector</span></td>
+                    <td><strong>RJ45</strong></td>
+                    <td class="desc-text">Conector estándar para cable UTP</td>
+                    <td class="price-tag" style="text-align: right;">$0.30</td>
+                    <td class="action-icons" style="text-align: center;">
+                        <i class="fas fa-pen"></i>
+                        <i class="fas fa-trash"></i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>#P-003</td>
+                    <td><span class="category-tag">Infraestructura</span></td>
+                    <td><strong>Rack 12U</strong></td>
+                    <td class="desc-text">Gabinete metálico para montaje de equipos</td>
+                    <td class="price-tag" style="text-align: right;">$180.00</td>
+                    <td class="action-icons" style="text-align: center;">
+                        <i class="fas fa-pen"></i>
+                        <i class="fas fa-trash"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
